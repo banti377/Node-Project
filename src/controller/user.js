@@ -2,6 +2,7 @@ import { modals } from "../model"
 import jwt from "jsonwebtoken"
 import { config } from "../config"
 import bcrypt from "bcrypt"
+import { sendOtp } from "../functions/emailhandler"
 
 const creatToken = (user) => {
     return jwt.sign({ email: user.email, id: user._id }, config.secret_key)
@@ -50,9 +51,26 @@ export const signin = async (req, res) => {
     }
 }
 
-export const forgetPassword = (req, res) => {
-
+export const forgetPassword = async (req, res) => {
+    let { code, newPassword } = req?.body
+    try {
+        const user = await modals?.User?.findOne({ code })
+        if (user.code !== code) {
+            return res.status(400).send("Invalid OTP")
+        }
+        user.password = newPassword
+        await user.save()
+        res.status(200).send("Password changed successfully")
+    } catch (error) {
+        res.status(400).send({
+            success: false,
+            data: null,
+            message: error.messsage
+        })
+    }
 }
+
+
 export const resetPassword = async (req, res) => {
     let { newPassword, oldPassword } = req.body
     try {
@@ -69,3 +87,16 @@ export const resetPassword = async (req, res) => {
             .send({ data: null, success: false, error: message })
     }
 }
+
+export const sendOTP = async (req, res) => {
+    try {
+        const matchUser = await modals?.User.findOne({ email: req?.body?.email });
+        if (!matchUser) res.status(400).send("user not found with this email");
+        let otp = sendOtp(matchUser.email);
+        matchUser.code = otp;
+        await matchUser.save();
+        res.status(200).send("otp sent to your email");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};

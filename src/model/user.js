@@ -71,6 +71,7 @@ let userSchema = mongoose.Schema(
         following: Number,
         caption: String,
         profilePic: String,
+        code: String,
 
     },
     { timestamp: true }

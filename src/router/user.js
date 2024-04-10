@@ -1,5 +1,5 @@
 import express from "express"
-import { forgetPassword, resetPassword, signin, signup } from "../controller/user"
+import { forgetPassword, resetPassword, signin, signup, sendOTP } from "../controller/user"
 import { auth } from "../middleWare/auth"
 
 
@@ -12,5 +12,7 @@ router.post("/signin", signin)
 router.post("/forget-password", forgetPassword)
 
 router.post("/reset-password", auth, resetPassword)
+
+router.post("/sendOtp", sendOTP)
 
 export default router
