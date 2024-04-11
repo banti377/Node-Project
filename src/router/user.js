@@ -2,7 +2,6 @@ import express from "express"
 import { forgetPassword, resetPassword, signin, signup, sendOTP } from "../controller/user"
 import { auth } from "../middleWare/auth"
 
-
 const router = express.Router()
 
 router.post("/signup", signup)

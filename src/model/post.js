@@ -21,7 +21,11 @@ const postSchema = mongoose.Schema(
         userId: {
             type: ObjectId,
             ref: "user"
-        }
+        },
+        likeCount: {
+            type: Number,
+            default: 0,
+        },
     },
 
     { timestamps: true }
