@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
             .send({ success: false, data: null, message: error.message })
     }
 }
-export const signin = async (req, res) => {
+export const signIn = async (req, res) => {
     let { email, password } = req.body
 
     try {
