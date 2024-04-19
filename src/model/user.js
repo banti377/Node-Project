@@ -66,12 +66,13 @@ let userSchema = mongoose.Schema(
             country: String,
             pinCode: String,
         },
-        followers: Number,
-        postCount: Number,
-        following: Number,
+        followers: { type: Number, default: 0 },
+        postCount: { type: Number, default: 0 },
+        following: { type: Number, default: 0 },
         caption: String,
         profilePic: String,
         code: String,
+        isPrivate: { type: Boolean, default: false }
 
     },
     { timestamp: true }

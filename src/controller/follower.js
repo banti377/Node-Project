@@ -1,11 +1,11 @@
-import modals from "../model";
+import { modals } from "../model";
 
 export const getPendingRequest = async (req, res) => {
-  modals.Follower.find({ reciverId: req?.me?._id, status: "pending" })
+  modals.Follower.find({ reciverId: req?.user?.id, status: "pending" })
     .then(async (resData) => {
       res
         .status(200)
-        .send({ data: resData, success: true, message: "Request pending" });
+        .send({ data: resData, success: true, message: "Create succesfully" });
     })
     .catch((err) => {
       res
@@ -14,20 +14,23 @@ export const getPendingRequest = async (req, res) => {
     });
 };
 
+
 export const sendRequest = async (req, res) => {
   let input = req?.body;
-  input.senderId = req?.me?._id;
+  input.senderId = req?.me?.id;
 
-  const match = await modals.Follower.findOne(input);
-  if (match) throw new Error("You already sent request");
+  const match = await modals?.Follower?.findOne(input);
+  if (match) {
+    return res.status(400).send({ data: null, success: false, message: "already request sent" })
+  };
 
-  const user = await modals.Follower.findById(input.reciverId);
+  const user = await modals?.User?.findById(input.reciverId);
   if (!user.isPrivate) {
     user.followers = user.followers + 1;
     user.save();
     input.status = "accept";
-    me.following = me?.following + 1;
-    me.save();
+    user.following = user?.following + 1;
+    user.save();
   }
 
   modals.Follower.create(input)
@@ -45,23 +48,23 @@ export const sendRequest = async (req, res) => {
     });
 };
 
-export const reqHandler = (req, res) => {
-  const input = req?.body;
+export const requestHandler = async (req, res) => {
+  const input = req.body;
 
   if (input.status === "reject") {
-    modals.Follower.findByIdAndDelete(input.requestId).then((resData) => {
+    modals.Follower.findByIdAndDelete(input.requestId).then(() => {
       res
         .status(200)
-        .send({ data: resData, success: true, message: "Reject Succesfully" });
+        .send({ data: "", success: true, message: "Rejected succesfully" });
     });
   } else {
     modals.Follower.findById(input.requestId)
-      .then((resData) => {
-        modals.User.findByIdAndUpdate(input.reciverId, {
-          following: { $inc: 1 },
+      .then(async (resData) => {
+        await modals.User.findByIdAndUpdate(input.reciverId, {
+          $inc: { following: 1 },
         });
-        me.followers = me?.follower + 1;
-        me.save();
+        user.followers = user?.followers + 1;
+        user.save();
 
         res.status(200).send({
           data: resData,

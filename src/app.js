@@ -4,6 +4,7 @@ import cors from "cors";
 import userRouter from "./router/user";
 import postRouter from "./router/post";
 import likeRouter from "./router/like";
+import followerRouter from "./router/follower";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/like", likeRouter);
+app.use("/follower", followerRouter);
 
 app.get("/", (_, res) => {
   res.send("Hello World..!");

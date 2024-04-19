@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ObjectId = mongoose.Schema.Type.ObjectId;
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const followerSchema = mongoose.Schema(
   {
@@ -14,7 +14,8 @@ const followerSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "accept"],
+      enum: ["pending", "accept", "rejected"],
+      default: "pending"
     },
   },
   {
