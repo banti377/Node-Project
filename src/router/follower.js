@@ -10,6 +10,5 @@ router.get("/accept-reject", auth, requestHandler);
 
 router.post("/send-request", auth, sendRequest);
 
-// router.post("/delete", auth, remove)
 
 export default router;

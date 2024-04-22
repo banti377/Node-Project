@@ -24,7 +24,7 @@ export const getAll = (req, res) => {
 export const likeDislike = (req, res) => {
     let input = req?.body
     input.userId = req?.me?._id
-    modals.Like.findOne({ userId: input.userId, postId: input.postId })
+    modals.Like.findOne(input)
         .then(async (existingLike) => {
             if (existingLike) {
                 await modals.Like.findByIdAndDelete(existingLike._id);

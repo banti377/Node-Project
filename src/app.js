@@ -5,6 +5,7 @@ import userRouter from "./router/user";
 import postRouter from "./router/post";
 import likeRouter from "./router/like";
 import followerRouter from "./router/follower";
+import savedPostRouter from "./router/savedPost";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/like", likeRouter);
 app.use("/follower", followerRouter);
+app.use("/savedPost", savedPostRouter)
 
 app.get("/", (_, res) => {
   res.send("Hello World..!");
