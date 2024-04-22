@@ -14,7 +14,6 @@ export const getPendingRequest = async (req, res) => {
     });
 };
 
-
 export const sendRequest = async (req, res) => {
   let input = req?.body;
   input.senderId = req?.me?.id;
@@ -79,3 +78,4 @@ export const requestHandler = async (req, res) => {
       });
   }
 };
+
