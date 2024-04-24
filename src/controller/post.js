@@ -34,9 +34,9 @@ export const create = (req, res) => {
 }
 
 export const remove = (req, res) => {
-    modals.Post.findByOneAndRemove({ _id: req?.params?.id, userId: req.me._id })
+    modals.Post.findOneAndDelete({ _id: req?.params?.id, userId: req.me._id })
         .then((resData) => {
-            res.status(200).send({ data: null, success: true, message: "Delete successfully" })
+            res.status(200).send({ data: resData, success: true, message: "Delete successfully" })
         })
         .catch((err) => {
             res.status(400).send({ data: null, success: false, message: err.message })
