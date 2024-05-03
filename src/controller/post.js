@@ -32,7 +32,6 @@ export const create = async (req, res) => {
 };
 
 export const remove = (req, res) => {
-<<<<<<< HEAD
   modals.Post.findOneAndDelete({ _id: req?.params?.id, userId: req.me._id })
     .then((resData) => {
       if (!resData) {
@@ -49,14 +48,4 @@ export const remove = (req, res) => {
         .status(400)
         .send({ data: null, success: false, message: err.message });
     });
-};
-=======
-    modals.Post.findOneAndDelete({ _id: req?.params?.id, userId: req.me._id })
-        .then((resData) => {
-            res.status(200).send({ data: resData, success: true, message: "Delete successfully" })
-        })
-        .catch((err) => {
-            res.status(400).send({ data: null, success: false, message: err.message })
-        })
 }
->>>>>>> 4b1154fa5e1cb9125206041c0b093b17ec9f92b2
