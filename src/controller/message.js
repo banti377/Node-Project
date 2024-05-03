@@ -42,6 +42,7 @@ export const sendMessage = (req, res) => {
     });
 };
 
+<<<<<<< HEAD
 export const remove = (req, res) => {
   modals.Message.findOneAndDelete({
     _id: req?.params?.id,
@@ -63,3 +64,15 @@ export const remove = (req, res) => {
         .send({ data: null, success: false, message: err.message });
     });
 };
+=======
+
+export const deleteMessage = (req, res) => {
+  modals.Message.findByIdAndDelete({ _id: req?.params?.id })
+      .then((resData) => {
+          res.status(200).send({ data: resData, success: true, message: "Delete successfully" })
+      })
+      .catch((err) => {
+          res.status(400).send({ data: null, success: false, message: err.message })
+      })
+}
+>>>>>>> 4b1154fa5e1cb9125206041c0b093b17ec9f92b2
