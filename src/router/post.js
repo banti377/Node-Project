@@ -10,6 +10,6 @@ router.get("/getByUser", auth, getByUser)
 
 router.post("/create", auth, create)
 
-router.post("/delete", auth, remove)
+router.delete("/delete", auth, remove)
 
 export default router
