@@ -24,12 +24,12 @@ export const sendRequest = async (req, res) => {
   };
 
   const user = await modals?.User?.findById(input.reciverId);
-  if (!user.isPrivate) {
+  if (!user?.isPrivate) {
     user.followers = user.followers + 1;
     user.save();
     input.status = "accept";
-    user.following = user?.following + 1;
-    user.save();
+    req.me.following = req?.me?.following + 1;
+    req?.me?.save();
   }
 
   modals.Follower.create(input)
@@ -51,19 +51,19 @@ export const requestHandler = async (req, res) => {
   const input = req.body;
 
   if (input.status === "reject") {
-    modals.Follower.findByIdAndDelete(input.requestId).then(() => {
+    modals.Follower.findOneAndDelete({ senderId: input?.senderId, reciverId: req?.me?._id }).then((ress) => {
       res
         .status(200)
         .send({ data: "", success: true, message: "Rejected succesfully" });
     });
   } else {
-    modals.Follower.findById(input.requestId)
+    modals.Follower.findOneAndUpdate({ senderId: input?.senderId, reciverId: req?.me?._id }, { status: "accept" })
       .then(async (resData) => {
-        await modals.User.findByIdAndUpdate(input.reciverId, {
+        await modals.User.findByIdAndUpdate(input.senderId, {
           $inc: { following: 1 },
         });
-        user.followers = user?.followers + 1;
-        user.save();
+        req.me.followers = req?.me?.followers + 1;
+        req.me.save();
 
         res.status(200).send({
           data: resData,
