@@ -3,14 +3,14 @@ import {
   forgetPassword,
   resetPassword,
   signIn,
-  signup,
+  signUp,
   sendOTP,
 } from "../controller/user";
 import { auth } from "../middleWare/auth";
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup", signUp);
 
 router.post("/signin", signIn);
 

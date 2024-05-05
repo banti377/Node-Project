@@ -8,7 +8,7 @@ const creatToken = (user) => {
     return jwt.sign({ email: user.email, id: user._id }, config.secret_key)
 }
 
-export const signup = async (req, res) => {
+export const signUp = async (req, res) => {
     let input = req.body
     try {
         const match = await modals.User.findOne({
@@ -84,7 +84,7 @@ export const resetPassword = async (req, res) => {
     } catch (error) {
         res
             .status(400)
-            .send({ data: null, success: false, error: message })
+            .send({ data: null, success: false,  message: error.messsage})
     }
 }
 
