@@ -8,23 +8,56 @@ const creatToken = (user) => {
     return jwt.sign({ email: user.email, id: user._id }, config.secret_key)
 }
 
+
+// --------------- signUp --------------- //
+
 export const signUp = async (req, res) => {
-    let input = req.body
     try {
-        const match = await modals.User.findOne({
-            $or: [{ email: input.email }, { contactNo: input.contactNo }]
-        })
-        if (match) throw new Error("email or password are used")
+        const { email, password } = req.body;
+        
+        // Validate email and password
+        if (!email || !password) {
+            throw new Error("Email and password are required");
+        }
 
-        let user = await modals.User.create(input)
+        // Check if user with email already exists
+        const existingUser = await modals.User.findOne({ email });
+        if (existingUser) {
+            throw new Error("Email already in use");
+        }
 
-        res.status(200).send({ success: true, data: user, token: "", message: "User create successfully" })
+        // Create new user
+        const user = await modals.User.create({ email, password });
+
+        // Send success response
+        res.status(200).json({ success: true, data: user, message: "User created successfully" });
     } catch (error) {
-        res
-            .status(400)
-            .send({ success: false, data: null, message: error.message })
+        // Handle errors
+        console.error("Error in signUp:", error);
+        res.status(400).json({ success: false, message: error.message });
     }
 }
+
+// export const signUp = async (req, res) => {
+//     let input = req.body
+//     try {
+//         const match = await modals.User.findOne({
+//             $or: [{ email: input.email }, { contactNo: input.contactNo }]
+//         })
+//         if (match) throw new Error("email or password are used")
+
+//         let user = await modals.User.create(input)
+
+//         res.status(200).send({ success: true, data: user, token: "", message: "User create successfully" })
+//     } catch (error) {
+//         res
+//             .status(400)
+//             .send({ success: false, data: null, message: error.message })
+//     }
+// }
+
+// --------------- SignIn --------------- //
+
 export const signIn = async (req, res) => {
     let { email, password } = req.body
 
@@ -33,23 +66,52 @@ export const signIn = async (req, res) => {
             $or: [{ email: email }, { contactNo: email }]
         })
 
-        if (!matchUser) throw new Error("User not found with credetial")
-        let match = await matchUser.validatePassword(password)
-        if (!match) throw new Error("Email or password are not match")
+        if (!matchUser) throw new Error("User not found with provided credentials")
+        
+        // Assuming `validatePassword` is a method on the user model
+        const match = await matchUser.validatePassword(password)
+        if (!match) throw new Error("Email or password is incorrect")
 
-
+        // If user and password are validated successfully
         res.status(200).send({
             success: true,
             data: matchUser,
-            token: creatToken(matchUser),
-            message: "User create successfully"
+            // token: createToken(matchUser),
+            message: "Login successful"
         })
     } catch (error) {
-        res
-            .status(400)
-            .send({ success: false, token: "", data: null, message: error.message })
+        res.status(400).send({ success: false, token: "", data: null, message: error.message })
     }
 }
+
+
+// export const signIn = async (req, res) => {
+//     let { email, password } = req.body
+
+//     try {
+//         const matchUser = await modals.User.findOne({
+//             $or: [{ email: email }, { contactNo: email }]
+//         })
+
+//         if (!matchUser) throw new Error("User not found with credetial")
+//         let match = await matchUser.validatePassword(password)
+//         if (!match) throw new Error("Email or password are not match")
+
+
+//         res.status(200).send({
+//             success: true,
+//             data: matchUser,
+//             token: creatToken(matchUser),
+//             message: "User create successfully"
+//         })
+//     } catch (error) {
+//         res
+//             .status(400)
+//             .send({ success: false, token: "", data: null, message: error.message })
+//     }
+// }
+
+// --------------- forgetPassword --------------- //
 
 export const forgetPassword = async (req, res) => {
     let { code, newPassword } = req?.body
@@ -70,6 +132,7 @@ export const forgetPassword = async (req, res) => {
     }
 }
 
+// --------------- resetPassword --------------- //
 
 export const resetPassword = async (req, res) => {
     let { newPassword, oldPassword } = req.body
@@ -87,6 +150,8 @@ export const resetPassword = async (req, res) => {
             .send({ data: null, success: false,  message: error.messsage})
     }
 }
+
+// --------------- sendOTP --------------- //
 
 export const sendOTP = async (req, res) => {
     try {
