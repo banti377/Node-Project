@@ -1,8 +1,8 @@
 import { modals } from "../model"
-import jwt from "jsonwebtoken"
 import { config } from "../config"
 import bcrypt from "bcrypt"
 import { sendOtp } from "../functions/emailhandler"
+import jwt from "jsonwebtoken"
 
 const creatToken = (user) => {
     return jwt.sign({ email: user.email, id: user._id }, config.secret_key)
@@ -76,7 +76,7 @@ export const signIn = async (req, res) => {
         res.status(200).send({
             success: true,
             data: matchUser,
-            // token: createToken(matchUser),
+            token: creatToken(matchUser),
             message: "Login successful"
         })
     } catch (error) {
