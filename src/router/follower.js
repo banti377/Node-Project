@@ -1,6 +1,6 @@
 import express from "express";
 import { auth } from "../middleWare/auth";
-import { getPendingRequest, requestHandler, sendRequest } from "../controller/follower";
+import { getAll, getPendingRequest, requestHandler, sendRequest } from "../controller/follower";
 
 const router = express.Router();
 
@@ -10,5 +10,6 @@ router.get("/accept-reject", auth, requestHandler);
 
 router.post("/send-request", auth, sendRequest);
 
+router.get("/getall", auth, getAll);
 
 export default router;

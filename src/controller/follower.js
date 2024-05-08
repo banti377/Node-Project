@@ -79,3 +79,31 @@ export const requestHandler = async (req, res) => {
   }
 };
 
+export const getAll = async (req, res) => {
+  try {
+    const { userId } = req.body
+
+    const following = await modals?.Follower?.find({
+      senderId: userId,// reciver id 
+      status: "accept"
+    })
+    const followers = await modals?.Follower?.find({
+      reciverId: userId, // sender id
+      status: "accept"
+    })
+
+    res.status(200).send({
+      following: following,
+      followers: followers,
+      message: "Accepted succesfully",
+      success: true,
+    })
+  } catch (err) {
+    res.status(400).send({
+      following: null,
+      followers: null,
+      message: err.message,
+      success: false,
+    })
+  }
+}
