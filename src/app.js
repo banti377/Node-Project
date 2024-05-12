@@ -7,6 +7,7 @@ import likeRouter from "./router/like";
 import followerRouter from "./router/follower";
 import savedPostRouter from "./router/savedPost";
 import messageRouter from "./router/message";
+import path from "path";
 
 const app = express();
 
@@ -24,4 +25,5 @@ app.get("/", (_, res) => {
   res.send("Hello World..!");
 });
 
+app.use(express.static(path.join(__dirname, '..', 'public')))
 export default app;
