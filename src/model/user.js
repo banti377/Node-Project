@@ -70,9 +70,9 @@ let userSchema = mongoose.Schema(
         postCount: { type: Number, default: 0 },
         following: { type: Number, default: 0 },
         caption: String,
-        profilePic: String,
         code: String,
-        isPrivate: { type: Boolean, default: false }
+        isPrivate: { type: Boolean, default: false },
+        profileImage: String
 
     },
     { timestamp: true }
