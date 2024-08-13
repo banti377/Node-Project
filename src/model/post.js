@@ -1,24 +1,39 @@
 import mongoose from "mongoose";
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const { ObjectId } = mongoose.Schema.Types;
 
 const postSchema = mongoose.Schema(
   {
-    type: {
+    title: {
       type: String,
-      enum: {
-        values: ["post", "reel"],
-        message: `{VALUE} is not supported`,
-      },
+      // enum: {
+      //   values: ["post", "reel"],
+      //   message: `{VALUE} is not supported`,
+      // },
+      require: true,
+      // default: "post",
     },
-    post: [String],
+    photo: {
+      type: [String],
+      require: true,
+    },
     caption: {
       type: String,
-      trim: true,
+      require: true,
+      // trim: true,
+      // maxlength: 2200,
     },
-    hasTag: [String],
-    tagUserId: [{ type: ObjectId, ref: "user" }],
-    userId: {
+    // hasTag: {
+    //   type: [String],
+    //   default: [],
+    // },
+    // tagUserId: [
+    //   {
+    //     type: ObjectId,
+    //     ref: "user",
+    //   },
+    // ],
+    postedBy: {
       type: ObjectId,
       ref: "user",
     },

@@ -1,25 +1,32 @@
-import jwt from "jsonwebtoken"
-import { config } from "../config"
-import { modals } from "../model"
+import jwt from "jsonwebtoken";
+import { config } from "../config";
+import { modals } from "../model";
 
 export const auth = async (req, res, next) => {
     try {
-        let token = req?.headers?.["x-token"]
-        if (!token) throw new Error("Session invalid or expire")
-        else {
-            let data = jwt.verify(token, config.secret_key)
-            const user = await modals.User.findById(data?.id)
-            req.me = user
-            next()
+        const token = req.headers["x-token"];
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Access denied. No token provided." });
         }
+
+        const decoded = jwt.verify(token, config.secret_key);
+        const user = await modals.User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid token." });
+        }
+
+        req.user = user;
+        next();
     } catch (error) {
-        res
-            .status(500)
-            .send({ success: false, data: null, message: error.message })
+        res.status(401).json({ success: false, message: "Invalid or expired token." });
     }
-}
+};
 
 export const adminAuth = (req, res, next) => {
-    if (req.me.userType === "admin") next()
-    else throw new Error("You are not admin")
-}
+    if (req.user && req.user.userType === "admin") {
+        next();
+    } else {
+        return res.status(403).json({ success: false, message: "Access denied. Admins only." });
+    }
+};
