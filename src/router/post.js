@@ -1,5 +1,11 @@
 import express from "express";
-import { create, getAll, getByUser, remove } from "../controller/post";
+import {
+  create,
+  getAll,
+  getByUser,
+  getMyPosts,
+  remove,
+} from "../controller/post";
 import { auth } from "../middleWare/auth";
 import multer from "multer";
 import fs from "fs";
@@ -27,6 +33,8 @@ router.get("/getAll", auth, getAll);
 router.get("/getByUser", auth, getByUser);
 
 router.post("/create", auth, create);
+
+router.get("/getMyPosts", auth, getMyPosts);
 
 router.delete("/delete", auth, remove);
 

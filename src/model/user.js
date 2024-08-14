@@ -73,6 +73,7 @@ let userSchema = mongoose.Schema(
     code: String,
     isPrivate: { type: Boolean, default: false },
     userName: String,
+    profileImage:String
   },
   { timestamp: true }
 );
